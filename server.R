@@ -78,17 +78,52 @@ shinyServer(function(input, output) {
     read.csv("data/ClaimsData.csv")
   })
   
+  getPredictedVisit <- reactive({
+    input$goButton
+    claimsData <- getClaimsData()
+    fitVisit <- lm(Visits ~ EE_Type+Age_EE0+Age_EE1+Age_EE2+Age_EE3+Hlevel, data=claimsData)
+    
+    EE_Type <- factor(x=isolate(input$insWho), c(1,2,3,4),labels=c("EE0","EE1","EE2","EE3"))
+    newdata <- data.frame(EE_Type=EE_Type, 
+                          Age_EE0=isolate(input$dep0Age), 
+                          Age_EE1=isolate(input$dep1Age), 
+                          Age_EE2=isolate(input$dep2Age), 
+                          Age_EE3=isolate(input$dep3Age), 
+                          Hlevel=integer(isolate(input$hlevel)))
+    abs(round(predict(fitVisit, newdata)[1],0))
+    
+  })
+  
+  getPredictedAvgCost <- reactive({
+    input$goButton
+    claimsData <- getClaimsData()
+    fitCost <- lm(TotalCost ~ EE_Type+Age_EE0+Age_EE1+Age_EE2+Age_EE3+Hlevel, data=claimsData)
+    
+    EE_Type <- factor(x=isolate(input$insWho), c(1,2,3,4),labels=c("EE0","EE1","EE2","EE3"))
+    newdata <- data.frame(EE_Type=EE_Type, 
+                          Age_EE0=isolate(input$dep0Age), 
+                          Age_EE1=isolate(input$dep1Age), 
+                          Age_EE2=isolate(input$dep2Age), 
+                          Age_EE3=isolate(input$dep3Age), 
+                          Hlevel=as.integer(isolate(input$hlevel)))
+    avgCost <- abs(round(predict(fitCost, newdata)[1], 2))
+    
+    if(getPredictedVisit()>0) 
+      return(avgCost/getPredictedVisit())
+    return(avgCost)
+  })
+  
   output$plot1 <- renderPlot({
     input$goButton
     
     claimsData <- getClaimsData()
-    
     par(mar = c(5.1, 4.1, 0, 1))
     plot(claimsData$EE_Type, claimsData$TotalCost/claimsData$Visits,
          xlab="Who is insured", ylab="Avg cost per visit",
          pch = 20, cex = 3)
-    points(isolate(input$insWho), 150, pch = 4, cex = 4, lwd = 4)
     
+    points(isolate(input$insWho), as.integer(getPredictedAvgCost()), 
+           pch = 4, cex = 4, lwd = 4)
     # Use isolate() to avoid dependency on input$*
     
   })
@@ -97,17 +132,12 @@ shinyServer(function(input, output) {
     # Take a dependency on input$goButton
     input$goButton
     
-    #claimsData <- getClaimsData()
-    
-    # Use isolate() to avoid dependency on input$*
-    isolate(input$insWho)
-    isolate(input$dep0Age)
-    isolate(input$dep1Age)
-    isolate(input$dep2Age)
-    isolate(input$dep3Age)
-    isolate(input$hlevel)
-    
-    paste("$", input$goButton)
+    if(getPredictedVisit()==0) 
+      paste("Not enough data to predict for the given values")
+    else
+      paste("The model has predicted ", getPredictedVisit(), 
+          "visits with a cost of $", round(getPredictedAvgCost(),2), 
+          "per visit")
   })
 })
 

@@ -2,10 +2,10 @@ Developing Data Products Project - Health Insurance Plan Analysis
 ========================================================
 author: Easwer Chinnadurai
 date: 2/22/2015
+transition: rotate
 
 Health Insurance Plan Analysis
 ========================================================
-transition: rotate
 
 Disclaimer:
 This presentation was created as part of the "Developing Data Products" course on the Data Science Specialization of the Johns Hopkins University of Public Health. 
@@ -15,27 +15,23 @@ data that I obtained from my colleges. Also I had not considered every influenci
 
 The Application
 ========================================================
-transition: rotate
 
 To display the understanding of using shiny to build an application, a simple application to analyse the total cost different Health Insurance plan has been developed and deployed at: https://easwerc.shinyapps.io/HealthInsurancePlan/
 
-Most employers provide health insurance for their employees. The insurance plan offered comes with multiple type of plans. Usually one with high premium but low deductible and at least one other with low premium but with high deductible. 
+<small>Most employers provide health insurance for their employees. The insurance plan offered comes with multiple type of plans. Usually one with high premium but low deductible and at least one other with low premium but with high deductible. Employees need to choose one of these plan. They are left with the question, Which plan is best for me?
 
-Employees need to choose one of these plan. They are left with the question, Which plan is best for me? 
-This application helps the user calculate the total cost for the health insurance by providing some information from his/hers past year data. If past years data is not available then the app helps predict those information by providing some basic details 
+This application helps the user calculate the total cost for the health insurance by providing some information from his/hers past year data. If past years data is not available then the app helps predict those information by providing some basic details </small>
 
 Compare Plans
 ========================================================
-transition:rotate
 
-Provide the basic details from each plan. You can also analyze the change in total expense by changing the influencing factors
+<small>Provide the basic details from each plan. You can also analyze the change in total expense by changing the influencing factors</small>
 ![alt text](www/ComparePlan.png)
 
 Predict Cost & Visits
 ========================================================
-transition:rotate
 
-When the users does not have his/hers year's claims data. Then the app helps predict it by getting some basic information
+<small>When the users does not have his/hers year's claims data. Then the app helps predict it by getting some basic information</small>
 ![alt text](www/PredictCost.png)
 ***
 
